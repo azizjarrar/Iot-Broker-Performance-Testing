@@ -11,9 +11,6 @@
 - Type Number Of Topics
 - Choose Quality of service
 - Choose String Size
-- Export documents as Markdown, HTML and PDF
-
-
 
 ## Installation
 > Note: `requires node js to be installed in your machine`
