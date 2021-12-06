@@ -78,8 +78,8 @@ function App() {
       })
       AppRef.current.scrollTop =AppRef.current.scrollHeight
     }else{
+      setCounter(e=>e+1)
       setPakets(old=>{
-        setCounter(e=>e+1)
         if(old.length>1000){
           return []
         }else{
@@ -141,8 +141,8 @@ function App() {
           <TextField   onChange={inputChangeHandler} className={classes.input} name={"port"} defaultValue={"15296"} sx={{width:"25%"}} id="outlined-search" label="port" type="text" />
           <TextField   onChange={inputChangeHandler} sx={{width:"48%"}} className={classes.input} name={"username"} id="outlined-search" defaultValue={"aziz"} label="username" type="text" />
           <TextField   onChange={inputChangeHandler} sx={{width:"48%"}} className={classes.input} name={"password"} id="outlined-search" defaultValue={"aziz"} label="password" type="text" />
-          <TextField   onChange={inputChangeHandler} className={classes.input} name={"repeatNumber"} id="outlined-search" defaultValue={2} label="repeatNumber" type="text" />
-          <TextField   onChange={inputChangeHandler} className={classes.input} name={"timebetweenEachTry"} id="outlined-search" defaultValue={4000} label="timebetweenEachTry With Ms" type="text" />
+          <TextField   onChange={inputChangeHandler} className={classes.input} name={"repeatNumber"} id="outlined-search" defaultValue={2} label="Repeat Number" type="text" />
+          <TextField   onChange={inputChangeHandler} className={classes.input} name={"timebetweenEachTry"} id="outlined-search" defaultValue={4000} label="Time Between Each Try With Ms" type="text" />
           <TextField   onChange={inputChangeHandler} className={classes.input} name={"clientNumber"} id="outlined-search" defaultValue={5} label="client Numbers" type="text" />
           <TextField   onChange={inputChangeHandler} className={classes.input} name={"numberOfPublishForTopic"} id="outlined-search" defaultValue={1} label="Number Of Publish For Each Topic" type="text" />
           <TextField   onChange={inputChangeHandler} className={classes.input} name={"topicsNumber"} id="outlined-search" defaultValue={1} label="Topics Number" type="search" />
@@ -154,7 +154,7 @@ function App() {
 
       </Box>
       <Box  className={classes.centerelementHorizontal}  sx={{padding:"15px",borderRadius:"10px",marginTop:"30px",background:"white" ,width:"60%",gap:"20px",display:"flex",flexDirection:"column",flexGrow: 1 }}>
-        <Typography variant="h3" sx={{fontSize:"20px",width:"90% !important" }}>average {result.moyene}</Typography>
+        <Typography variant="h3" sx={{fontSize:"20px",width:"90% !important" }}>Average {result.moyene}</Typography>
         </Box>
       <Box   sx={{ flexGrow: 1 }}>
 
@@ -165,9 +165,9 @@ function App() {
         <TableHead>
           <TableRow>
             <TableCell>Client Id</TableCell>
-            <TableCell align="right">test Number</TableCell>
-            <TableCell align="right">timetorecive</TableCell>
-            <TableCell align="right">topicName</TableCell>
+            <TableCell align="right">Test Number</TableCell>
+            <TableCell align="right">Time To Recive</TableCell>
+            <TableCell align="right">Topic Name</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -187,7 +187,7 @@ function App() {
     </TableContainer>
       </Box>
       <Box  className={classes.centerelementHorizontal}  sx={{padding:"15px",borderRadius:"10px",marginTop:"30px",background:"white" ,width:"60%",gap:"20px",display:"flex",flexDirection:"column",flexGrow: 1 }}>
-        <Typography variant="h3" sx={{fontSize:"20px",width:"90% !important" }}>messages Recived Count : {count}</Typography>
+        <Typography variant="h3" sx={{fontSize:"20px",width:"90% !important" }}>Messages Recived Count : {count}</Typography>
       </Box>
     </div>
   );
