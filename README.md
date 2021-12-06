@@ -14,6 +14,7 @@
 - Export documents as Markdown, HTML and PDF
 
 
+> Note: `--requires node js to be installed in your machine`
 
 ## Installation
 
