@@ -1,6 +1,7 @@
 const express = require('express')
 const cors =require('cors')
 const app = express()
+const oneClient= require('./oneClient')
 var whitelist = ['http://127.0.0.1:5010/']
 const index = require('./index.js');
 var corsOptions = {
@@ -38,38 +39,9 @@ let  performanceTest= async (repeatNumber,timebetweenEachTry,stringLnength,clien
 
 
  connectUrl = `${host}:${port}`
-  /**********************************/
-  /*********publish data*********/
-  /**********************************/
- const  PublishData=(string,clientId,client,topic,quality)=>{
-  CountMessageSent++ 
-  let currentTime=Date.now()
-  
-  client.publish(topic, `client_id ${clientId} String = ${string} currentTimeOfSendingData=${currentTime}`   , { qos: quality,retain: true }, (error) => {
-    if (error) {
-        console.error(error)
-      }
-    })
-  }
-  /**********************************/
-  /*********client Connexion*********/
-  /**********************************/
-  const clientConnexion=(clientId,pushblishCount,string,topics,connectUrl,quality,username,password)=>{
-    const client = mqtt.connect(connectUrl, {
-        clientId,
-        clean: true,
-        connectTimeout: 4000,
-        username: username,
-        password: password,
-        reconnectPeriod: 1000,
-      })
-  
-      for(let i = 0 ; i< pushblishCount ;i++){
-        for(let t = 0; t < topics.length;t++){
-          PublishData(string,clientId,client,topics[t],quality)
-        }
-      }
-  }
+
+
+
   /**********************************/
   /*********global connexion*********/
   /**********************************/
@@ -89,8 +61,8 @@ let  performanceTest= async (repeatNumber,timebetweenEachTry,stringLnength,clien
     });
     client.end()
   });
-
   if(subscribeName!=undefined){
+    
     client.subscribe([...subscribeName],{rh :true}, () => { 
      console.log(`Subscribe to topic '${subscribeName}'`)
     })
@@ -98,8 +70,6 @@ let  performanceTest= async (repeatNumber,timebetweenEachTry,stringLnength,clien
 
   let  totalNumberOfPublishes= numberOfPublishForTopic * clientNumber * topics.length;//how many message we will send
   let dataToSendEachTwentyPublish=[]//if  publishes are more then 50 i will send them packs by 50  this array wil contain them
-  let CountMessageSent=0//count messeges thats users has sent
-  let CountMessageRecived=0// count recived messages
   let LeastAndMostTime=[];//countain all packets time to recive data
 
    /************************************/
@@ -109,9 +79,7 @@ let  performanceTest= async (repeatNumber,timebetweenEachTry,stringLnength,clien
     if(packet.retain!=true){
       let RecivedTime=Date.now()
       var stringBuf = payload.toString('utf-8');//convert payload to string
-      CountMessageRecived++  // count how many messages are recived
       LeastAndMostTime.push(RecivedTime - parseInt(stringBuf.substr(-13)))//push delay time to array
-
       //if there is more then 50 publish i send them by pack of 50 else i send them one by one
       if(totalNumberOfPublishes<50){
         io.to(req.body.socketId).emit("packetRecived",{clinetid:stringBuf.slice(0,27),topicName:topic,timetorecive:(RecivedTime - parseInt(stringBuf.substr(-13)))})  
@@ -130,7 +98,7 @@ let  performanceTest= async (repeatNumber,timebetweenEachTry,stringLnength,clien
       const stringLength ="a".repeat(stringLnength)
         //how many client will make this actions
       for(let i = 0 ; i < clientNumber;i++){
-        clientConnexion(genereId(),numberOfPublishForTopic,stringLength,topics,connectUrl,quality,username,password)
+        oneClient(numberOfPublishForTopic,stringLength,topics,connectUrl,quality,username,password)
       }
       //wait time between every action
       await sleep(timebetweenEachTry);
@@ -140,9 +108,6 @@ let  performanceTest= async (repeatNumber,timebetweenEachTry,stringLnength,clien
       dataToSendEachTwentyPublish=[]
     }
     console.log("finish")
-    console.log("succes ratio",((CountMessageRecived)/CountMessageSent)*100 + "%")
-    console.log("CountMessageRecived :", CountMessageRecived)
-    console.log("CountMessageSent :", CountMessageSent)
    // console.log(LeastAndMostTime)
     var min = Math.min(...LeastAndMostTime);
     var max = Math.max(...LeastAndMostTime);
@@ -165,9 +130,7 @@ let  performanceTest= async (repeatNumber,timebetweenEachTry,stringLnength,clien
 
  
 
-  /**************************************************************/
-  /*********stop sending and calculate response Time*************/
-  /**************************************************************/
+
 
 }
 
@@ -183,7 +146,7 @@ let  performanceTest= async (repeatNumber,timebetweenEachTry,stringLnength,clien
 const {hosturl,port,repeatNumber,timebetweenEachTry,stringSize,clientNumber,numberOfPublishForTopic,topicsNumber,ofs,username,password}=req.body
 var topics = [];
 for (var i = 1; i <= topicsNumber; i++) {
-topics.push("topic : "+i+" "+req.body.socketId);
+topics.push("topic"+i);
 }
 performanceTest(repeatNumber,timebetweenEachTry,stringSize,clientNumber,numberOfPublishForTopic,topics,topics,hosturl,port,ofs-0,username,password)
 }catch(error){

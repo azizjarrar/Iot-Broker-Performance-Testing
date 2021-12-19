@@ -14,7 +14,6 @@ io.on("connection", (socket) => {
     socket.on('disconnect', function () {
       console.log("disconnect")
     });
-
 });
 
 function getSocketIo(){
