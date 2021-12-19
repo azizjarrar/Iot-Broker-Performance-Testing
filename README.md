@@ -11,12 +11,9 @@
 - Type Number Of Topics
 - Choose Quality of service
 - Choose String Size
-- Export documents as Markdown, HTML and PDF
-
-
 
 ## Installation
-
+> Note: `requires node js to be installed in your machine`
 - 1)git clone https://github.com/azizjarrar/iotperformance.git
 - 2)acces folder via your terminal then type npm install 
 - 3)cd ./client then type npm install
